@@ -1,0 +1,13 @@
+{
+  "name": "gyroscope-server",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "osc": "^2.4.5",
+    "socket.io": "^4.8.1"
+  }
+}

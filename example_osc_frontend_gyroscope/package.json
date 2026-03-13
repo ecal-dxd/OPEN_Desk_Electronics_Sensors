@@ -1,0 +1,8 @@
+{
+  "name": "example_osc_frontend_gyroscope",
+  "private": true,
+  "scripts": {
+    "server": "cd server && npm start",
+    "frontend": "cd frontend && npm run dev"
+  }
+}
