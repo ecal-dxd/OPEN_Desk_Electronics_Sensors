@@ -22,22 +22,26 @@ io.on("connection", (socket) => {
 async function main() {
 	const { parser } = await connectArduino();
 
+	// Map Arduino output to PARAMS keys (e.g. "Potentiometer value" → "linear_pot")
+	const SENSOR_ALIASES = { "Potentiometer value": "linear_pot" };
+
 	function normalizeData(data) {
-		const [sensor, value] = data.split(":");
+		const [rawSensor, rawValue] = data.split(":").map((s) => s.trim());
+		const sensor = SENSOR_ALIASES[rawSensor] || rawSensor;
 		const param = PARAMS[sensor];
-		const normalizedValue = (value - param.min) / (param.max - param.min);
-		if (normalizedValue < 0) {
-			return 0;
-		}
-		if (normalizedValue > 1) {
-			return 1;
-		}
+		if (!param) return null;
+
+		const value = Number(rawValue);
+		if (Number.isNaN(value)) return null;
+
+		let normalizedValue = (value - param.min) / (param.max - param.min);
+		normalizedValue = Math.max(0, Math.min(1, normalizedValue));
 		return { value: normalizedValue, id: sensor };
 	}
 
 	parser.on("data", (line) => {
 		const processedData = normalizeData(line);
-		io.emit("arduino", processedData);
+		if (processedData) io.emit("arduino", processedData);
 	});
 
 	server.listen(PORT, () => {

@@ -6,7 +6,7 @@ export const player = ({ id, x, y, ctx }) => {
 	let targetY = y;
 	y = y || margin;
 	let width = 30;
-	let height = window.innerHeight * 0.3;
+	let height = id == 1 ? window.innerHeight * 0.3 : window.innerHeight * 1;
 
 	function init() {
 		console.log("player initialized");
